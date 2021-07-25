@@ -1,0 +1,38 @@
+{
+  "name": "ASKL",
+  "version": "1.0.0",
+  "description": "ASKL (pronounced 'ASKULL') is a beat-saber inspired game where a user has 4 sabers to control with the keys 'A S K L'. A randomly selected song will play and the user will have to hit the right key combinations that match the beat of the song to earn points. Users can be on a continuous point streak for not missing a beat. The rules are simple. Start the song, hit the right keys and make it to the end. Too many mistakes and you will have to restart.",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --watch --mode=development",
+    "build": "webpack --mode=production"
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GT458/ASKL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GT458/ASKL/issues"
+  },
+  "homepage": "https://github.com/GT458/ASKL#readme",
+  "dependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-loader": "^8.2.2",
+    "core-js": "^3.15.2",
+    "css-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.1.0",
+    "regenerator-runtime": "^0.13.9",
+    "sass": "^1.36.0",
+    "sass-loader": "^12.1.0",
+    "webpack": "^5.46.0",
+    "webpack-cli": "^4.7.2"
+  }
+  
+}
