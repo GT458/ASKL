@@ -1,0 +1,10 @@
+.message-box {
+  width: 400px;
+  height: 400px;
+  .message {
+    color: red;
+    span {
+      text-align: center;
+    }
+  }
+}
