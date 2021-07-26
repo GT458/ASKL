@@ -34,7 +34,7 @@ In addition, this project will include:
 
 
 # Technologies
- Besides basic vanilla JS, HTML, and CSS, Three.js will be used to render the game itself. 
+ Besides basic vanilla JS, HTML, and CSS, Canvas will be used to render the game itself. 
  The Web Audio API will be used to determine the beats per minute for a song to determine how to generate combos for the user to hit.
  NPM will be used to handle the packages used for the project, as well as webpack and babel for transpiling the JS code. 
 
@@ -45,7 +45,7 @@ In addition, this project will include:
 
 * Monday:
   * Input detection of keys and matching key hit with incoming obstacle
-  * Work with ThreeJS to begin rendering obstacles and track with player
+  * Work with Canvas to begin rendering obstacles and track with player
 * Tuesday:
   * Using Web Audio API to obtain beats per minute of a song
   * UI work for start/pause menu to implement song selection
