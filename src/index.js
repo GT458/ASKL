@@ -1,4 +1,5 @@
 const Input = require('./scripts/input')
+import * as keyInputs from './scripts/key_input';
 import * as THREE from './scripts/three.module.js';
   let camera, scene, renderer;
   let geometry, material, mesh;
