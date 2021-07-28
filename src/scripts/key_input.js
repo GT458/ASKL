@@ -1,5 +1,6 @@
 
 class keyInputs {
+  
   constructor() {
     this.keysDown = {
       a: false,
@@ -11,70 +12,70 @@ class keyInputs {
     // this.keyUp();
     this.setKeyDown = this.setKeyDown.bind(this);
     this.getKeyDown = this.getKeyDown.bind(this);
+    window.addEventListener("keydown", this.keyDown.bind(this), true);
+    window.addEventListener("keyup", this.keyUp.bind(this), true);
   }
   
-  keyDown() {
+  keyDown(event) {
+    if (event.defaultPrevented) {
+      return; // Do nothing if the event was already processed
+    }
+        switch(event.key) {
+          case 'a':
+            this.setKeyDown('a');
+            // console.log(this.getKeyDown());
 
-    // window.addEventListener("keydown", function(event) {
-    //   // debugger;
-    //   if (event.defaultPrevented) {
-    //     return;
-    //   }
-     
-    //     switch(event.key) {
-    //       case 'a':
-    //         // setKeyDown('a');
-    //         // this.keysDown.a = true;
-    //         break;
-    //       case 's':
-    //         console.log('s down');
-    //         // keysDown.s = true;
-    //         break;
-    //       case 'k':
-    //         console.log('k down');
-    //         // keysDown.k = true;
-    //         break;
-    //       case 'l':
-    //         console.log('l down');
-    //         // keysDown.l = true;
-    //         break;
-    //       default:
-    //         console.log('key down');
-    //     }
-      
-      
-    // })
+            // this.keysDown.a = true;
+            break;
+          case 's':
+            this.setKeyDown('s');
+            // keysDown.s = true;
+            break;
+          case 'k':
+            this.setKeyDown('k');
+            // keysDown.k = true;
+            break;
+          case 'l':
+            this.setKeyDown('l');
+            // keysDown.l = true;
+            break;
+          default:
+            return;
+        }
+        event.preventDefault();
   }
 
-  keyUp() {
-  //   window.addEventListener("keyup", function(event) {
-  //   if (event.defaultPrevented) {
-  //     return;
-  //   }
-
-  //   switch(event.key) {
-  //     case 'a':
-  //       // keysDown.a = false;
-  //       // console.log(`key: ${this.getKeyDown()}`)
-  //       // this.setKeyDown('a');
-  //       // console.log('a up');
-  //       break;
-  //     case 's':
-  //       // keysDown.s = false;
-  //       console.log('s up');
-  //       break;
-  //     case 'k':
-  //       // keysDown.k = false;
-  //       console.log('k up');
-  //       break;
-  //     case 'l':
-  //       // keysDown.l = false;
-  //       console.log('l up');
-  //       break;
-  //     default:
-  //       console.log('key up')
-  //   }
-  // })
+  keyUp(event) {
+    if (event.defaultPrevented) {
+      return; // Do nothing if the event was already processed
+    }
+    switch(event.key) {
+      case 'a':
+        // keysDown.a = false;
+        // console.log(`key: ${this.getKeyDown()}`)
+        this.setKeyDown('a');
+        // console.log(this.getKeyDown());
+        break;
+      case 's':
+        // keysDown.s = false;
+        this.setKeyDown('s');
+        // console.log('s up');
+        break;
+      case 'k':
+        this.setKeyDown('k');
+        // keysDown.k = false;
+        // console.log('k up');
+        break;
+      case 'l':
+        // keysDown.l = false;
+        this.setKeyDown('l');
+        // console.log(\'l up');
+        break;
+      default:
+        return;
+    }
+    console.log(this.getKeyDown());
+    event.preventDefault();
   }
 
   getKeyDown() {
