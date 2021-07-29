@@ -1,1 +1,23 @@
 @import url('./styles/key_input.scss');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500&display=swap');
+body {
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(167, 157, 157);
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+h1 {
+  font-weight: 400;
+  text-align: center;
+}
+#gameCanvas {
+  border-radius: 20px;
+}

@@ -10,15 +10,15 @@ export default class Cube {
     //   THREE.BufferGeometry.dispose();
     // },10000)
 
-    setInterval(() => {
-      this.obj.position.z += 1;
-    }, 100)
+    // setInterval(() => {
+    //   this.obj.position.z += 7;
+    // }, 100)
     
   }
 
   createModel() {
-    const geometry = new THREE.BoxGeometry( 5, 5, 15 );
-    const material = new THREE.MeshBasicMaterial({color: this.color});
+    const geometry = new THREE.BoxGeometry( 5, 5, 5 );
+    const material = new THREE.MeshMatcapMaterial({color: this.color});
     const cube = new THREE.Mesh( geometry, material);
 
     return cube;
