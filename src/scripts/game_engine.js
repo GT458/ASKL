@@ -4,6 +4,7 @@ const fonter = require('../fonts/roboto.json')
 const STARTING_POSITIONS = {a: (0,0,-100), s: (6, 0, -100), k: (12, 0, -100), l: (18, 0, -100)}
 export default class GameEngine {
   constructor() {
+    this.stars = [];
     this.spawnedObjects = [];
     this.gameRunning = false;
     this.scene = new THREE.Scene();
@@ -17,7 +18,7 @@ export default class GameEngine {
     this.sCube = new Cube('pink').obj;
     this.kCube = new Cube('red').obj;
     this.lCube = new Cube('blue').obj;
-    this.light = new THREE.AmbientLight(0x404040, 2);
+    this.light = new THREE.DirectionalLight(0xFFFFFF, 2);
     this.light.position.set(0, 0, -50);
     this.scene.add(this.light);
     this.trackGeo = new THREE.BoxGeometry(1200,40, 3);
@@ -31,10 +32,17 @@ export default class GameEngine {
     //   font: "Tahoma",
     // });
     this.gameInit();
-    
+    this.addStars = this.addStars.bind(this);
+    this.animateStars = this.animateStars.bind(this);
   }
 
   gameInit() {
+    window.addEventListener("keydown", event => {
+      this.plane.material.color.setHex(0xff0000)
+    })
+    window.addEventListener("keyup", event => {
+      this.plane.material.color.setHex(0x45618F)
+    })
     // const loader = new THREE.FontLoader();
 
     // loader.load( fonter, function ( font ) {
@@ -76,7 +84,7 @@ export default class GameEngine {
       
     }
     requestAnimationFrame(this.animate);
-    
+    this.addStars();
   }
 
   removeSomeObject(object) {
@@ -100,6 +108,30 @@ export default class GameEngine {
     this.renderer.render(this.scene, this.camera);
 
     requestAnimationFrame(this.animate);
+    requestAnimationFrame(this.animateStars);
   }
   
+  addStars(){
+    	for ( let z= -1000; z < 1000; z+=20 ) {
+					let geometry   = new THREE.SphereGeometry(0.5, 32, 32)
+					let material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+					let sphere = new THREE.Mesh(geometry, material)
+					sphere.position.x = Math.random() * 1000-500;
+					sphere.position.y = Math.random() * 1000-500;
+					sphere.position.z = z;
+					sphere.scale.x = sphere.scale.y = 2;
+					this.scene.add( sphere );
+					this.stars.push([sphere, sphere.position.z]); 
+				}
+	}
+
+  animateStars() {
+    for (let i = 0; i < this.stars.length; i++) {
+      this.stars[i][0].position.z += 3;
+      if ( this.stars[i][0].position.z > 200) {
+        this.stars[i][0].position.z =  this.stars[i][1];
+      }
+    }
+    requestAnimationFrame(this.animateStars);
+  }
 }
