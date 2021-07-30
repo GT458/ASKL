@@ -42,6 +42,7 @@ class keyInputs {
           default:
             return;
         }
+        console.log(this.getKeyDown());
         event.preventDefault();
   }
 
