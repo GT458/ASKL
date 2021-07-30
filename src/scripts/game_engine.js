@@ -1,6 +1,6 @@
 import * as THREE from './three.module'
 import Cube from './cube';
-const fonter = require('../fonts/roboto.json')
+import * as myFont from '../fonts/helvetiker_regular.typeface.json'
 const STARTING_POSITIONS = {a: (0,0,-100), s: (6, 0, -100), k: (12, 0, -100), l: (18, 0, -100)}
 export default class GameEngine {
   constructor() {
@@ -14,54 +14,54 @@ export default class GameEngine {
     document.body.appendChild( this.renderer.domElement );
     // this.animation = this.animation.bind(this);
     this.animate = this.animate.bind(this);
-    this.aCube = new Cube('green').obj;
-    this.sCube = new Cube('pink').obj;
-    this.kCube = new Cube('red').obj;
-    this.lCube = new Cube('blue').obj;
+    this.aCube = {model: new Cube('green').obj, startPos: [-12, 0, -300], name: 'a'};
+    this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's'};
+    this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k'};
+    this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l'};
     this.light = new THREE.DirectionalLight(0xFFFFFF, 2);
     this.light.position.set(0, 0, -50);
-    this.scene.add(this.light);
+    // this.scene.add(this.light);
     this.trackGeo = new THREE.BoxGeometry(1200,40, 3);
-    this.trackMaterial = new THREE.MeshToonMaterial({color: 0x45618F})
+    this.trackMaterial = new THREE.MeshPhongMaterial({color: 0xffffff})
     this.plane = new THREE.Mesh(this.trackGeo, this.trackMaterial);
     this.scene.add(this.plane);
-    
-    // this.title = new THREE.TextGeometry("A S K L", {
-    //   size: 30,
-    //   height: 20,
-    //   font: "Tahoma",
-    // });
-    this.gameInit();
     this.addStars = this.addStars.bind(this);
     this.animateStars = this.animateStars.bind(this);
+    this.gameInit();
   }
 
   gameInit() {
     window.addEventListener("keydown", event => {
-      this.plane.material.color.setHex(0xff0000)
+      this.plane.material.color.setHex(0xffffff)
     })
     window.addEventListener("keyup", event => {
-      this.plane.material.color.setHex(0x45618F)
+      this.plane.material.color.setHex(0x000000)
     })
     // const loader = new THREE.FontLoader();
+    const font = new THREE.Font(myFont);
+    const geometry = new THREE.TextGeometry( 'A S K L', {
+        font: font,
+        size: 80,
+        height: 5,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelOffset: 0,
+        bevelSegments: 5
+      } );
+      const pointLight = new THREE.PointLight(0xffffff, .75); 
+      pointLight.position.set(0, 50, 200); 
+      
+      this.scene.add(pointLight); 
+      // pointLight.color.setHSL(Math.random(), 1, 0.5);
+      let textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
 
-    // loader.load( fonter, function ( font ) {
-
-    //   const geometry = new THREE.TextGeometry( 'ASKL', {
-    //     font: font,
-    //     size: 80,
-    //     height: 5,
-    //     curveSegments: 12,
-    //     bevelEnabled: true,
-    //     bevelThickness: 10,
-    //     bevelSize: 8,
-    //     bevelOffset: 0,
-    //     bevelSegments: 5
-    //   } );
-    //   this.scene.add(geometry);
-    // });
-    // this.scene.add(geometry);
-    // this.title.position.set(0, 0, -20);
+      let mesh = new THREE.Mesh( geometry, textMaterial );
+      mesh.position.set( -170, 150, -350 );
+      mesh.rotateX(Math.PI/5)
+      this.scene.add(mesh);
+      pointLight.lookAt(mesh.position)
     this.camera.position.set(0, 20, 200);
     this.camera.lookAt(0,0,-50);
     this.gameRunning = true;
@@ -71,12 +71,14 @@ export default class GameEngine {
     {
       let cubes = [this.aCube, this.sCube, this.kCube, this.lCube];
       setInterval(() => {
-
-        let tempCube = cubes[Math.floor(Math.random()*cubes.length)].clone();
-        tempCube.name ='temp-cube';
+        let selectedCube = cubes[Math.floor(Math.random()*cubes.length)]
+        let tempCube = selectedCube.model.clone();
+        tempCube.name = selectedCube.name;
         this.spawnedObjects.push(tempCube);
         this.scene.add(tempCube);
-        tempCube.position.set(Math.floor(-10+Math.random()*20), 0, -200);
+        tempCube.position.set(selectedCube.startPos[0],selectedCube.startPos[1],selectedCube.startPos[2])
+        // debugger;
+        // tempCube.position.set(Math.floor(-10+Math.random()*20), 0, -200);
       }, 1000)
       // for (let i = 0; i < 10; i++) {
         
@@ -84,25 +86,33 @@ export default class GameEngine {
       
     }
     requestAnimationFrame(this.animate);
+    // requestAnimationFrame(this.animateStars);
     this.addStars();
   }
 
   removeSomeObject(object) {
-    this.scene.remove(cubeMesh);
+    this.scene.remove(object);
     object.geometry.dispose();
     object.material.dispose();
     object = undefined;
+    console.log('bye bye');
   }
   animate(time) {
     time *= 0.001;
 
     this.spawnedObjects.forEach((cube, ndx) => {
+      if (cube === undefined) {
+        console.log('poop cube');
+        return;
+      }
       const speed = 1 + ndx * .1;
       const rot = time * speed;
       // cube.rotation.x = rot;
       // cube.rotation.y = rot;
       cube.position.z = cube.position.z + 5;
-      
+      if (cube.position.z > 300) {
+        this.removeSomeObject(cube);
+      }
     });
 
     this.renderer.render(this.scene, this.camera);
@@ -127,11 +137,14 @@ export default class GameEngine {
 
   animateStars() {
     for (let i = 0; i < this.stars.length; i++) {
-      this.stars[i][0].position.z += 3;
-      if ( this.stars[i][0].position.z > 200) {
+      this.stars[i][0].position.z += .001;
+      if ( this.stars[i][0].position.z > 400) {
         this.stars[i][0].position.z =  this.stars[i][1];
+        this.stars[i][0].position.x = Math.floor(Math.random()*500-250);
+        this.stars[i][0].position.y = Math.floor(Math.random()*150-25);
       }
     }
-    requestAnimationFrame(this.animateStars);
+    // this.renderer.render(this.scene, this.camera);
+    // requestAnimationFrame(this.animateStars);
   }
 }

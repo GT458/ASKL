@@ -18,7 +18,7 @@ export default class Cube {
 
   createModel() {
     const geometry = new THREE.BoxGeometry( 5, 5, 5 );
-    const material = new THREE.MeshMatcapMaterial({color: this.color});
+    const material = new THREE.MeshPhongMaterial({color: this.color});
     const cube = new THREE.Mesh( geometry, material);
 
     return cube;
