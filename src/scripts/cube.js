@@ -1,5 +1,5 @@
-import * as THREE from './three.module';
-
+// const THREE = require('https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js');
+const THREE = require('three.js');
 export default class Cube {
 
   constructor(color) {

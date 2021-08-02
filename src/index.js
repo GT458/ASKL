@@ -2,7 +2,7 @@ const Input = require('./scripts/input');
 let beginGame = false;
 // import keyInputs from './scripts/key_input';
 import Cube from './scripts/cube';
-import * as THREE from './scripts/three.module.js';
+// import * as THREE from './scripts/three.min.js';
 import GameEngine from './scripts/game_engine';
 // let camera, scene, renderer;
 // let geometry, material1, material2, material3, material4;

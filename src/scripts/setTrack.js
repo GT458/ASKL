@@ -1,4 +1,4 @@
-import * as THREE from './scripts/three.module.js';
+const THREE = require('three.js');
 export default class SetTrack {
   constructor() {
     this.scene = new THREE.scene;

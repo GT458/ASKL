@@ -1,4 +1,6 @@
-import * as THREE from './three.module'
+// import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js'
+// const THREE = require('https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js');
+const THREE = require('three.js');
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
 export default class GameEngine {
@@ -21,8 +23,9 @@ export default class GameEngine {
     this.light = new THREE.DirectionalLight(0xFFFFFF, 2);
     this.light.position.set(0, 0, -50);
     // this.scene.add(this.light);
+    
     this.goalAreaGeo = new THREE.BoxGeometry(40, 5, 3);
-    this.goalMaterial = new THREE.MeshToonMaterial({color: 0xffffff});
+    this.goalMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
     this.goalArea = new THREE.Mesh(this.goalAreaGeo, this.goalMaterial);
     this.scene.add(this.goalArea);
     this.goalArea.rotateX(Math.PI/2);
