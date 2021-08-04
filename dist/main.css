@@ -27,7 +27,8 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: #a79d9d;
+  background-color: #dc9b9b;
+  color: white;
 }
 
 .container {
@@ -41,14 +42,22 @@ body {
 h1 {
   font-weight: 400;
   text-align: center;
+  color: white;
 }
 
 #gameCanvas {
   border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 1500ms ease-out;
 }
 
 .show-colors {
-  box-shadow: 0 0 20px #e82a2a;
+  box-shadow: 0 0 20px #611212;
 }
 
 .nav-bar {

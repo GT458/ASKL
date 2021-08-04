@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     beginGame = false;
   }
   const canv = document.getElementById('gameCanvas');
+  canv.style.opacity = 1;
   const btn = document.querySelector('.begin-game-btn');
   
   btn.addEventListener('click', e => {

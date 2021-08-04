@@ -10,7 +10,7 @@ export default class GameEngine {
     this.spawnedObjects = [];
     this.gameRunning = false;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera( 60, 2, .01, 5000 );
+    this.camera = new THREE.PerspectiveCamera( 75, 100/100, .01, 5000 );
     const canvas = document.getElementById('gameCanvas');
     this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
     document.body.appendChild( this.renderer.domElement );
@@ -70,6 +70,20 @@ export default class GameEngine {
     
     this.gameInit();
   }
+  resizeRendererToDisplaySize = (renderer) => {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    // resize only when necessary
+    if (needResize) {
+      //3rd parameter `false` to change the internal canvas size
+      renderer.setSize(width, height, false);
+    }
+    return needResize;
+  }
+
+  
 
   gameInit() {
     window.addEventListener("keydown", event => {
@@ -115,8 +129,22 @@ export default class GameEngine {
       // }
       
     }
+    const render = (time) => {
+      if (this.resizeRendererToDisplaySize(this.renderer)) {
+        const canvas = this.renderer.domElement;
+        // changing the camera aspect to remove the strechy problem
+        this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        this.camera.updateProjectionMatrix();
+      }
+      // Re-render the scene
+      this.renderer.render(this.scene, this.camera);
+      // loop
+      requestAnimationFrame(render);
+    };
+    requestAnimationFrame(render);
     requestAnimationFrame(this.animate);
     requestAnimationFrame(this.animateStars);
+    
     this.addStars();
   }
 
@@ -129,7 +157,7 @@ export default class GameEngine {
   }
   animate(time) {
     time *= 0.001;
-    this.mesh.rotateX(Math.PI/time*.1);
+    // this.mesh.rotateX(Math.PI/time*.1);
     this.spawnedObjects.forEach((cube, ndx) => {
       // if (cube === undefined) {
       //   console.log('poop cube');
