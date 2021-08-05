@@ -15,26 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
     beginGame = false;
   }
   const canv = document.getElementById('gameCanvas');
-  canv.style.opacity = 1;
-  const btn = document.querySelector('.begin-game-btn');
+  const ge = new GameEngine();
+  setTimeout(() => {
+    
+    canv.style.opacity = 1;
+  }, 100)
   
-  btn.addEventListener('click', e => {
-    canv.classList.add('show-colors');
-    btn.classList.add('hide');
-    const ge = new GameEngine();
-  })
+  // const btn = document.querySelector('.begin-game-btn');
+  
+  
+  // btn.addEventListener('click', e => {
+  //   // canv.classList.add('show-colors');
+  //   btn.classList.add('hide');
+  // })
 })
-function animation(time) {
-    requestAnimationFrame(animation);
-    // mesh.position.x = keyInputs.keysDown.a ? mesh.position.x + 1 : 0;
-    // mesh.rotation.x = Date.now() * 0.0005;
-    // mesh.rotation.y = Date.now() * 0.001;
-    renderer.render( scene, camera );
-  }
-function main() {
 
-  
-  
-}
-
-window.onload = main;
