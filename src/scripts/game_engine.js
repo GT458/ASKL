@@ -1,12 +1,21 @@
 // import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js'
 // const THREE = require('https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js');
 const THREE = require('three.js');
+// const smokeTexture = new Image();
+
+// smokeTexture.src = 'https://redstapler.co/wp-content/uploads/2019/05/smoke-1.png';
+// smokeTexture.width = 256;
+// smokeTexture.height = 256;
+// smokeTexture.crossOrigin = "Anonymous";
+import smokeTexture from '../images/smoke.png';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
+
 export default class GameEngine {
   constructor() {
-    
+    // smokeTexture.crossOrigin = 'anonymous';
     this.stars = [];
+    this.cloudParticles = [];
     this.spawnedObjects = [];
     this.gameRunning = false;
     this.scene = new THREE.Scene();
@@ -20,8 +29,13 @@ export default class GameEngine {
     this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's'};
     this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k'};
     this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l'};
-    this.light = new THREE.DirectionalLight(0xFFFFFF, 2);
-    this.light.position.set(0, 0, -50);
+    this.ambientLight = new THREE.AmbientLight(0x777777);
+    this.scene.add(this.ambientLight);
+
+    this.scene.fog = new THREE.FogExp2(0x03544e, 0.001);
+    this.renderer.setClearColor(this.scene.fog.color);
+    this.setBackground(this.scene, this.cloudParticles);
+    // this.light.position.set(0, 0, -50);
     // this.scene.add(this.light);
     
     this.goalAreaGeo = new THREE.BoxGeometry(40, 5, 3);
@@ -102,7 +116,7 @@ export default class GameEngine {
       const pointLight = new THREE.PointLight(0xffffff, .75); 
       pointLight.position.set(0, 50, 200); 
       
-      this.scene.add(pointLight); 
+      // this.scene.add(pointLight); 
       // pointLight.color.setHSL(Math.random(), 1, 0.5);
       
     pointLight.lookAt(this.mesh.position)
@@ -136,16 +150,19 @@ export default class GameEngine {
         this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
         this.camera.updateProjectionMatrix();
       }
-      // Re-render the scene
+      this.cloudParticles.forEach(cloudP => {
+        cloudP.rotation.z -= 0.001;
+      })
+
       this.renderer.render(this.scene, this.camera);
-      // loop
+
       requestAnimationFrame(render);
     };
     requestAnimationFrame(render);
     requestAnimationFrame(this.animate);
-    requestAnimationFrame(this.animateStars);
+    // requestAnimationFrame(this.animateStars);
     
-    this.addStars();
+    // this.addStars();
   }
 
   removeSomeObject(object) {
@@ -299,5 +316,26 @@ export default class GameEngine {
   setKeyDown(key) {
     this.keysDown[key] = !this.keysDown[key];
     // console.log(this.keysDown)
+  }
+
+  setBackground(scene, cloudParticles) {
+    let loader = new THREE.TextureLoader();
+    loader.load(smokeTexture, function(texture) {
+      let cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
+      let cloudMaterial = new THREE.MeshLambertMaterial({
+        map: texture,
+        transparent: true
+      });
+
+      for (let i = 0; i < 50; i++) {
+        let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
+        cloud.position.set(Math.random() *800-400, 500, Math.random()*500-500);
+        cloud.rotation.x = 1.16;
+        cloud.rotation.y = -0.12;
+        cloud.rotation.z = Math.random() * 2 * Math.PI;
+        cloudParticles.push(cloud);
+        scene.add(cloud);
+      }
+    })
   }
 }
