@@ -1,12 +1,5 @@
-// import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js'
-// const THREE = require('https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js');
 const THREE = require('three.js');
-// const smokeTexture = new Image();
 
-// smokeTexture.src = 'https://redstapler.co/wp-content/uploads/2019/05/smoke-1.png';
-// smokeTexture.width = 256;
-// smokeTexture.height = 256;
-// smokeTexture.crossOrigin = "Anonymous";
 import smokeTexture from '../images/smoke.png';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
@@ -35,8 +28,9 @@ export default class GameEngine {
     this.scene.fog = new THREE.FogExp2(0x03544e, 0.001);
     this.renderer.setClearColor(this.scene.fog.color);
     this.setBackground(this.scene, this.cloudParticles);
-    // this.light.position.set(0, 0, -50);
-    // this.scene.add(this.light);
+    this.light = new THREE.PointLight(0xffffff);
+    this.light.position.set(0, 0, -50);
+    this.scene.add(this.light);
     
     this.goalAreaGeo = new THREE.BoxGeometry(40, 5, 3);
     this.goalMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
@@ -329,9 +323,9 @@ export default class GameEngine {
 
       for (let i = 0; i < 50; i++) {
         let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
-        cloud.position.set(Math.random() *800-400, 500, Math.random()*500-500);
-        cloud.rotation.x = 1.16;
-        cloud.rotation.y = -0.12;
+        cloud.position.set(Math.random() *2000-1000, Math.random() *400-50, Math.random()*50-400);
+        // cloud.rotation.x = 1.16;
+        // cloud.rotation.y = -0.12;
         cloud.rotation.z = Math.random() * 2 * Math.PI;
         cloudParticles.push(cloud);
         scene.add(cloud);
