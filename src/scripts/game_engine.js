@@ -1,50 +1,63 @@
-const THREE = require('three.js');
 
+const THREE = require('three.js');
+// const POSTPROCESSING = require('postprocessing');
 import smokeTexture from '../images/smoke.png';
+import stars from '../images/stars.jpeg';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
-
+// import {POSTPROCESSING} from postprocessing;
 export default class GameEngine {
   constructor() {
-    // smokeTexture.crossOrigin = 'anonymous';
+
+    // SET ARRAYS, SET UP CANVAS AND ENVIRONMENT
     this.stars = [];
     this.cloudParticles = [];
     this.spawnedObjects = [];
     this.gameRunning = false;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera( 75, 100/100, .01, 5000 );
+    
     const canvas = document.getElementById('gameCanvas');
     this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
     document.body.appendChild( this.renderer.domElement );
-    // this.animation = this.animation.bind(this);
-    this.animate = this.animate.bind(this);
+    this.scene.fog = new THREE.FogExp2(0x03544e, 0.001);
+    this.renderer.setClearColor(this.scene.fog.color);
+    this.setBackground(this.scene, this.cloudParticles);
+
+    // SET CAMERA 
+    this.camera = new THREE.PerspectiveCamera( 75, 100/100, .01, 5000 );
+    this.camera.position.set(0, 20, 200);
+    this.camera.lookAt(0,0,50);
+
+
+    // SET CUBE MODELS
     this.aCube = {model: new Cube('green').obj, startPos: [-12, 0, -300], name: 'a'};
     this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's'};
     this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k'};
     this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l'};
-    this.ambientLight = new THREE.AmbientLight(0x777777);
-    this.scene.add(this.ambientLight);
 
-    this.scene.fog = new THREE.FogExp2(0x03544e, 0.001);
-    this.renderer.setClearColor(this.scene.fog.color);
-    this.setBackground(this.scene, this.cloudParticles);
-    this.light = new THREE.PointLight(0xffffff);
-    this.light.position.set(0, 0, -50);
-    this.scene.add(this.light);
+
     
+    
+    
+
+    // SET GOAL/KEY HIT AREA
     this.goalAreaGeo = new THREE.BoxGeometry(40, 5, 3);
     this.goalMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
     this.goalArea = new THREE.Mesh(this.goalAreaGeo, this.goalMaterial);
     this.scene.add(this.goalArea);
     this.goalArea.rotateX(Math.PI/2);
     this.goalArea.position.set(0, -5, 150);
+
+    // SET LONG TRACK
     this.trackGeo = new THREE.BoxGeometry(1200,40, 3);
     this.trackMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
     this.plane = new THREE.Mesh(this.trackGeo, this.trackMaterial);
     this.scene.add(this.plane);
-    this.removeSomeObject = this.removeSomeObject.bind(this);
-    this.addStars = this.addStars.bind(this);
-    this.animateStars = this.animateStars.bind(this);
+    this.plane.rotateZ(Math.PI/2);
+    this.plane.rotateY(Math.PI/2);
+    this.plane.position.set(0,-10,0);
+
+    // SET INIT KEY AND SCORE
     this.score = 0;
     this.keysDown = {
       a: false,
@@ -52,6 +65,9 @@ export default class GameEngine {
       k: false,
       l: false
     }
+
+
+    // SET ASKL FONT
     this.font = new THREE.Font(myFont);
     this.geometry = new THREE.TextGeometry( 'A S K L', {
         font: this.font,
@@ -64,20 +80,51 @@ export default class GameEngine {
         bevelOffset: 0,
         bevelSegments: 5
       } );
-      this.textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+    this.textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+    this.mesh = new THREE.Mesh( this.geometry, this.textMaterial );
+    this.mesh.position.set( -170, 150, -350 );
+    this.mesh.rotateX(Math.PI/5)
+    this.scene.add(this.mesh);
 
-      this.mesh = new THREE.Mesh( this.geometry, this.textMaterial );
-      this.mesh.position.set( -170, 150, -350 );
-      this.mesh.rotateX(Math.PI/5)
-      this.scene.add(this.mesh);
+
+
+
+    // LIGHTING
+    this.directionalLightPaleOrange = new THREE.DirectionalLight(0xff8c19);
+    this.directionalLightPaleOrange.position.set(0,0,1);
+    // this.scene.add(this.directionalLightPaleOrange);    
+    this.orangeLight = new THREE.DirectionalLight(0xcc6600,50,450,1.7);
+    this.orangeLight.position.set(-50,10,-300);
+    this.scene.add(this.orangeLight);
+    this.redLight = new THREE.PointLight(0xd8547e,50,450,1.7);
+    this.redLight.position.set(0,10,-300);
+    this.scene.add(this.redLight);
+    this.blueLight = new THREE.PointLight(0x3677ac,50,450,1.7);
+    this.blueLight.position.set(50,10,-300);
+    this.scene.add(this.blueLight);
+    
+    // this.ambientLight = new THREE.AmbientLight(0x777777);
+    // this.scene.add(this.ambientLight);
+    
+    this.light = new THREE.PointLight(0xffffff);
+    this.light.position.set(0, 0, -50);
+    // this.scene.add(this.light);
+
+    // SET WINDOW FUNCTIONS, BINDING
     this.setKeyDown = this.setKeyDown.bind(this);
     this.getKeyDown = this.getKeyDown.bind(this);
     window.addEventListener("keydown", this.keyDown.bind(this), true);
     window.addEventListener("keyup", this.keyUp.bind(this), true);
     this.scoreObj = document.querySelector(".score");
-    
-    this.gameInit();
+    this.removeSomeObject = this.removeSomeObject.bind(this);
+    this.addStars = this.addStars.bind(this);
+    this.animateStars = this.animateStars.bind(this);
+    this.animate = this.animate.bind(this);
+
+    // INITIALIZE GAME
+    // this.gameInit();
   }
+
   resizeRendererToDisplaySize = (renderer) => {
     const canvas = renderer.domElement;
     const width = canvas.clientWidth;
@@ -102,24 +149,18 @@ export default class GameEngine {
       // debugger;
     })
     window.addEventListener("keyup", event => {
-      // this.goalArea.material.color.setHex(0x000000)
+      
       
     })
-    // const loader = new THREE.FontLoader();
-    
-      const pointLight = new THREE.PointLight(0xffffff, .75); 
-      pointLight.position.set(0, 50, 200); 
-      
-      // this.scene.add(pointLight); 
-      // pointLight.color.setHSL(Math.random(), 1, 0.5);
-      
+    const pointLight = new THREE.PointLight(0xffffff, .75); 
+    pointLight.position.set(0, 50, 200); 
+    // this.scene.add(pointLight); 
+    // pointLight.color.setHSL(Math.random(), 1, 0.5); 
     pointLight.lookAt(this.mesh.position)
-    this.camera.position.set(0, 20, 200);
-    this.camera.lookAt(0,0,-50);
     this.gameRunning = true;
-    this.plane.rotateZ(Math.PI/2);
-    this.plane.rotateY(Math.PI/2);
-    this.plane.position.set(0,-10,0);
+    
+
+    // this is how cubes are currently spawned, completely randomly at the same interval
     {
       let cubes = [this.aCube, this.sCube, this.kCube, this.lCube];
       setInterval(() => {
@@ -129,12 +170,8 @@ export default class GameEngine {
         this.spawnedObjects.push(tempCube);
         this.scene.add(tempCube);
         tempCube.position.set(selectedCube.startPos[0],selectedCube.startPos[1],selectedCube.startPos[2])
-        // debugger;
-        // tempCube.position.set(Math.floor(-10+Math.random()*20), 0, -200);
-      }, 1000)
-      // for (let i = 0; i < 10; i++) {
         
-      // }
+      }, 1000)
       
     }
     const render = (time) => {
@@ -314,13 +351,15 @@ export default class GameEngine {
 
   setBackground(scene, cloudParticles) {
     let loader = new THREE.TextureLoader();
+    
+  
     loader.load(smokeTexture, function(texture) {
       let cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
       let cloudMaterial = new THREE.MeshLambertMaterial({
         map: texture,
         transparent: true
       });
-
+    
       for (let i = 0; i < 50; i++) {
         let cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
         cloud.position.set(Math.random() *2000-1000, Math.random() *400-50, Math.random()*50-400);

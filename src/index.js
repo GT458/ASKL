@@ -17,16 +17,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const canv = document.getElementById('gameCanvas');
   const ge = new GameEngine();
   setTimeout(() => {
-    
     canv.style.opacity = 1;
   }, 100)
-  
-  // const btn = document.querySelector('.begin-game-btn');
-  
-  
-  // btn.addEventListener('click', e => {
-  //   // canv.classList.add('show-colors');
-  //   btn.classList.add('hide');
-  // })
+  const score = document.querySelector('.score');
+  const btn = document.querySelector('.play-btn');
+  const screenCover = document.querySelector('.screen-cover');
+  document.body.append(btn);
+
+  btn.addEventListener('click', e => {
+    btn.classList.toggle('hide');
+    score.classList.toggle('hide');
+    screenCover.classList.add('hide');
+    ge.gameInit();
+  })
 })
 
