@@ -35,7 +35,7 @@ body .screen-cover {
   top: 0;
   z-index: 1;
 }
-body .play-btn {
+body .btn {
   position: absolute;
   left: 50%;
   top: 30%;
@@ -51,9 +51,12 @@ body .play-btn {
   transition: opacity 1000ms ease-out;
   z-index: 20;
 }
-body .play-btn:hover {
+body .btn:hover {
   cursor: pointer;
   background-color: white;
+}
+body .instructions-btn {
+  top: 40%;
 }
 
 h1 {

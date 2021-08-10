@@ -21,14 +21,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 100)
   const score = document.querySelector('.score');
   const btn = document.querySelector('.play-btn');
+  const instructionsButton = document.querySelector('.instructions-btn');
   const screenCover = document.querySelector('.screen-cover');
   document.body.append(btn);
-
+  
   btn.addEventListener('click', e => {
-    btn.classList.toggle('hide');
-    score.classList.toggle('hide');
-    screenCover.classList.add('hide');
+    toggleButtonsToHide();
     ge.gameInit();
   })
+
+  instructionsButton.addEventListener('click', e => {
+    toggleButtonsToHide();
+    
+  })
+
+  const toggleButtonsToHide = () => {
+    btn.classList.toggle('hide');
+    instructionsButton.classList.toggle('hide');
+    screenCover.classList.add('hide');
+    score.classList.toggle('hide');
+  }
 })
 
