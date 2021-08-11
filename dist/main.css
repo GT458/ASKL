@@ -58,6 +58,14 @@ body .btn:hover {
 body .instructions-btn {
   top: 40%;
 }
+body .instructions {
+  width: 500px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 h1 {
   font-weight: 400;

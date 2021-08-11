@@ -37,7 +37,17 @@ body {
 
   .instructions-btn {
     top: 40%;
-    
+
+  }
+
+  .instructions {
+    width: 500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
   }
 }
 // .container {
