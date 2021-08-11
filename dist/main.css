@@ -36,15 +36,12 @@ body .screen-cover {
   z-index: 1;
 }
 body .btn {
-  position: absolute;
-  left: 50%;
-  top: 30%;
   border: none;
   border-radius: 10px;
   text-align: center;
   width: 200px;
   height: 50px;
-  margin-left: -100px;
+  margin-bottom: 30px;
   font-weight: bold;
   font-size: 20px;
   background-color: rgba(200, 200, 200, 0.5);
@@ -55,16 +52,25 @@ body .btn:hover {
   cursor: pointer;
   background-color: white;
 }
-body .instructions-btn {
-  top: 40%;
-}
 body .instructions {
   width: 500px;
   height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -250px;
+  background-color: black;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 22;
+}
+body .instructions .close-btn {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  cursor: pointer;
 }
 
 h1 {
@@ -85,7 +91,26 @@ h1 {
   transition: opacity 1500ms ease-out;
 }
 
+.btns-container {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  margin-left: -100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 200px;
+}
+.btns-container .socials {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  z-index: 22;
+}
+.btns-container .socials .github {
+  margin-right: 5px;
+}
+
 .hide {
-  transition: opacity 1500ms ease-out;
-  opacity: 0;
+  display: none !important;
 }

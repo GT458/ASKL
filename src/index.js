@@ -4,9 +4,6 @@ let beginGame = false;
 import Cube from './scripts/cube';
 // import * as THREE from './scripts/three.min.js';
 import GameEngine from './scripts/game_engine';
-// let camera, scene, renderer;
-// let geometry, material1, material2, material3, material4;
-// let mesh1, mesh2, mesh3, mesh4;
 
 document.addEventListener("DOMContentLoaded", () => {
   // const keyHandler = new keyInputs();
@@ -19,27 +16,32 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     canv.style.opacity = 1;
   }, 100)
+  const btns = document.querySelector('.btns-container')
   const score = document.querySelector('.score');
-  const btn = document.querySelector('.play-btn');
+  const playBtn = document.querySelector('.play-btn');
   const instructionsButton = document.querySelector('.instructions-btn');
+  const instructions = document.querySelector('.instructions');
   const screenCover = document.querySelector('.screen-cover');
-  document.body.append(btn);
+  const closeBtn = document.querySelector('.close-btn');
+  // document.body.append(playBtn);
   
-  btn.addEventListener('click', e => {
-    toggleButtonsToHide();
+  playBtn.addEventListener('click', e => {
+    toggleButtonsToHide([btns, screenCover, score]);
     ge.gameInit();
   })
-
+  closeBtn.addEventListener('click', e => {
+    // e.preventPropagation();
+    toggleButtonsToHide([instructions,btns])
+  })
   instructionsButton.addEventListener('click', e => {
-    toggleButtonsToHide();
+    toggleButtonsToHide([btns, instructions]);
     
   })
 
-  const toggleButtonsToHide = () => {
-    btn.classList.toggle('hide');
-    instructionsButton.classList.toggle('hide');
-    screenCover.classList.add('hide');
-    score.classList.toggle('hide');
+  const toggleButtonsToHide = (btns) => {
+    btns.forEach( btn => {
+      btn.classList.toggle('hide');
+    })
   }
 })
 
