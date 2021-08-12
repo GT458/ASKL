@@ -18,7 +18,7 @@ export default class GameEngine {
     
     const canvas = document.getElementById('gameCanvas');
     this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
-    document.body.appendChild( this.renderer.domElement );
+    
     this.scene.fog = new THREE.FogExp2(0x03544e, 0.001);
     this.renderer.setClearColor(this.scene.fog.color);
     this.setBackground(this.scene, this.cloudParticles);
@@ -80,7 +80,7 @@ export default class GameEngine {
         bevelOffset: 0,
         bevelSegments: 5
       } );
-    this.textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+    this.textMaterial = new THREE.MeshNormalMaterial( { color: 0xffffff, flatShading: true } );
     this.mesh = new THREE.Mesh( this.geometry, this.textMaterial );
     this.mesh.position.set( -170, 150, -350 );
     this.mesh.rotateX(Math.PI/5)
@@ -93,7 +93,7 @@ export default class GameEngine {
     this.directionalLightPaleOrange = new THREE.DirectionalLight(0xff8c19);
     this.directionalLightPaleOrange.position.set(0,0,1);
     // this.scene.add(this.directionalLightPaleOrange);    
-    this.orangeLight = new THREE.DirectionalLight(0xcc6600,50,450,1.7);
+    this.orangeLight = new THREE.DirectionalLight(0x4f80c9,50,450,1.7);
     this.orangeLight.position.set(-50,10,-300);
     this.scene.add(this.orangeLight);
     this.redLight = new THREE.PointLight(0xd8547e,50,450,1.7);
@@ -141,6 +141,7 @@ export default class GameEngine {
   
 
   gameInit() {
+    document.body.appendChild( this.renderer.domElement );
     window.addEventListener("keydown", event => {
       // this.goalArea.material.color.setHex(0xffffff)
       let objs = this.spawnedObjects;

@@ -1,5 +1,6 @@
 const Input = require('./scripts/input');
 let beginGame = false;
+// import MainMenu from './scripts/mainMenu';
 // import keyInputs from './scripts/key_input';
 import Cube from './scripts/cube';
 // import * as THREE from './scripts/three.min.js';
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   const canv = document.getElementById('gameCanvas');
   const ge = new GameEngine();
+  // const mm = new MainMenu();
   setTimeout(() => {
     canv.style.opacity = 1;
   }, 100)
@@ -23,10 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const instructions = document.querySelector('.instructions');
   const screenCover = document.querySelector('.screen-cover');
   const closeBtn = document.querySelector('.close-btn');
+
+  // mm.initMenu();
   // document.body.append(playBtn);
   
   playBtn.addEventListener('click', e => {
     toggleButtonsToHide([btns, screenCover, score]);
+    // mm.clearRenderer();
     ge.gameInit();
   })
   closeBtn.addEventListener('click', e => {
