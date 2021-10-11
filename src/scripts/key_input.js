@@ -14,13 +14,16 @@ class keyInputs {
     this.getKeyDown = this.getKeyDown.bind(this);
     window.addEventListener("keydown", this.keyDown.bind(this), true);
     window.addEventListener("keyup", this.keyUp.bind(this), true);
+    this.keyHeldDown = false;
   }
   
   keyDown(event) {
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
-        switch(event.key) {
+    if (this.keyHeldDown === false) {
+      this.keyHeldDown = true;
+      switch(event.key) {
           case 'a':
             this.setKeyDown('a');
             // console.log(this.getKeyDown());
@@ -42,6 +45,8 @@ class keyInputs {
           default:
             return;
         }
+    }
+        
         console.log(this.getKeyDown());
         event.preventDefault();
   }
@@ -50,6 +55,7 @@ class keyInputs {
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
+    this.keyHeldDown = false;
     switch(event.key) {
       case 'a':
         // keysDown.a = false;
@@ -85,6 +91,12 @@ class keyInputs {
 
   setKeyDown(key) {
     this.keysDown[key] = !this.keysDown[key];
+    if (this.keysDown[key] === true) {
+      //setTimeout(() => this.keysDown[key] = !this.keysDown[key], 500)
+      setTimeout(() => this.keysDown[key] = !this.keysDown[key], 3000)
+    }
+    
+    
     // console.log(this.keysDown)
   }
 }

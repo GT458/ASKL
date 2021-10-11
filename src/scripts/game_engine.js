@@ -15,7 +15,7 @@ export default class GameEngine {
     this.spawnedObjects = [];
     this.gameRunning = false;
     this.scene = new THREE.Scene();
-    
+    this.keyIsDown = false;
     const canvas = document.getElementById('gameCanvas');
     this.renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true});
     
@@ -111,6 +111,7 @@ export default class GameEngine {
     // this.scene.add(this.light);
 
     // SET WINDOW FUNCTIONS, BINDING
+    this.deductScore = this.deductScore.bind(this);
     this.setKeyDown = this.setKeyDown.bind(this);
     this.getKeyDown = this.getKeyDown.bind(this);
     window.addEventListener("keydown", this.keyDown.bind(this), true);
@@ -120,11 +121,18 @@ export default class GameEngine {
     this.addStars = this.addStars.bind(this);
     this.animateStars = this.animateStars.bind(this);
     this.animate = this.animate.bind(this);
-
+    this.keyIndicator = document.querySelector('.key-down');
+    this.debounce = false;
     // INITIALIZE GAME
     // this.gameInit();
   }
 
+  deductScore() {
+    const scoreError = document.querySelector('.error');
+    scoreError.classList.remove('hide');
+    setTimeout(() => scoreError.classList.add('hide'), 3000)
+
+  }
   resizeRendererToDisplaySize = (renderer) => {
     const canvas = renderer.domElement;
     const width = canvas.clientWidth;
@@ -148,6 +156,7 @@ export default class GameEngine {
       let childs = this.scene.children;
       
       // debugger;
+      
     })
     window.addEventListener("keyup", event => {
       
@@ -202,7 +211,7 @@ export default class GameEngine {
     object.geometry.dispose();
     object.material.dispose();
     object = undefined;
-    console.log('bye bye');
+    
   }
   animate(time) {
     time *= 0.001;
@@ -221,23 +230,27 @@ export default class GameEngine {
       if (cube.position.z > 300) {
         this.spawnedObjects.shift();
         this.removeSomeObject(cube);
-        this.score -= 1;
+        if (this.score > 0 ) {
+
+          this.score -= 1;
+          
+        }
+        this.deductScore();
         this.scoreObj.textContent = `Score: ${this.score}`;
       }
-      let debounce = false;
+      
       if (cube.position.z > 145 && cube.position.z < 160) {
-        console.log('yoo');
-        
-        if (this.keysDown[cube.name] && !debounce) {
-          debounce = true;
-          console.log('score!');
+      
+        if (this.keysDown[cube.name] && !this.debounce) {
+          this.debounce = true;
+          
           this.score += 1;
           this.scoreObj.textContent = `Score: ${this.score}`;
           this.removeSomeObject(cube);
         }
         
       }
-      debounce = false;
+      this.debounce = false;
     });
 
     this.renderer.render(this.scene, this.camera);
@@ -274,9 +287,13 @@ export default class GameEngine {
     // requestAnimationFrame(this.animateStars);
   }
   keyDown(event) {
+    this.keyIndicator.textContent = 'key down';
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
+    if (!this.keyIsDown) {
+      this.keyIsDown = true;
+    
         switch(event.key) {
           case 'a':
             this.setKeyDown('a');
@@ -302,15 +319,16 @@ export default class GameEngine {
           default:
             return;
         }
-        
+      }
         event.preventDefault();
   }
 
   keyUp(event) {
+    this.keyIndicator.textContent = 'key up';
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
-    
+    this.keyIsDown = false;
     switch(event.key) {
       case 'a':
         // keysDown.a = false;
@@ -336,7 +354,7 @@ export default class GameEngine {
       default:
         return;
     }
-    console.log(this.score);
+    //console.log(this.score);
     this.goalArea.material.color.setHex(0xffffff)
     event.preventDefault();
   }
@@ -346,7 +364,11 @@ export default class GameEngine {
   }
 
   setKeyDown(key) {
+    
     this.keysDown[key] = !this.keysDown[key];
+    // if (this.keysDown[key]) {
+    //   setTimeout(() => this.keysDown[key] = false, 1500)
+    // }
     // console.log(this.keysDown)
   }
 

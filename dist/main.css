@@ -114,3 +114,18 @@ h1 {
 .hide {
   display: none !important;
 }
+
+.error {
+  color: red !important;
+  font-size: 30px;
+  text-align: center;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  width: 200px;
+  margin-left: -100px;
+}
+
+.hide {
+  display: none;
+}
