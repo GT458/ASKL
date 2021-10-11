@@ -5,6 +5,8 @@ import smokeTexture from '../images/smoke.png';
 import stars from '../images/stars.jpeg';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
+
+
 // import {POSTPROCESSING} from postprocessing;
 export default class GameEngine {
   constructor() {
@@ -13,7 +15,7 @@ export default class GameEngine {
     this.stars = [];
     this.cloudParticles = [];
     this.spawnedObjects = [];
-    this.gameRunning = false;
+    this.gameRunning = true;
     this.scene = new THREE.Scene();
     this.keyIsDown = false;
     const canvas = document.getElementById('gameCanvas');
@@ -59,6 +61,7 @@ export default class GameEngine {
 
     // SET INIT KEY AND SCORE
     this.score = 0;
+    this.misses = 0;
     this.keysDown = {
       a: false,
       s: false,
@@ -111,6 +114,8 @@ export default class GameEngine {
     // this.scene.add(this.light);
 
     // SET WINDOW FUNCTIONS, BINDING
+    this.restartGame = this.restartGame.bind(this);
+    this.gameOver = this.gameOver.bind(this);
     this.deductScore = this.deductScore.bind(this);
     this.setKeyDown = this.setKeyDown.bind(this);
     this.getKeyDown = this.getKeyDown.bind(this);
@@ -123,15 +128,52 @@ export default class GameEngine {
     this.animate = this.animate.bind(this);
     this.keyIndicator = document.querySelector('.key-down');
     this.debounce = false;
+    this.interval = null;
     // INITIALIZE GAME
     // this.gameInit();
   }
 
-  deductScore() {
-    const scoreError = document.querySelector('.error');
-    scoreError.classList.remove('hide');
-    setTimeout(() => scoreError.classList.add('hide'), 3000)
+  restartGame() {
+    const gc = document.createElement('canvas');
+    gc.setAttribute('id', 'gameCanvas');
+    document.body.appendChild(gc);
+    setTimeout(() => {
+    gc.style.opacity = 1;
+  }, 100)
+    document.querySelector('.game-over-bg').remove();
+    const screenCover = document.querySelector('.screen-cover');
+    screenCover.classList.remove('hide');
+  }
 
+  gameOver() {
+    this.gameRunning = false;
+    
+    clearInterval(this.interval);
+    this.scene.children.forEach( child => {
+      this.scene.remove(child);
+
+    })
+    const gameOverBg = document.createElement('div');
+    gameOverBg.classList.add('game-over-bg');
+    const gameOverText = document.createElement('h1');
+    gameOverText.textContent = 'Game Over';
+    gameOverBg.appendChild(gameOverText);
+    document.body.appendChild(gameOverBg);
+    const restartBtn = document.createElement('button');
+    restartBtn.classList.add('restart-btn');
+    restartBtn.onclick = this.restartGame;
+    gameOverBg.appendChild(restartBtn);
+    //document.querySelector('#gameCanvas').remove();
+  }
+  deductScore() {
+    const scoreError = document.createElement('h1');
+    let randomNum = '' + Math.random()*1000;
+    scoreError.textContent = 'Miss!';
+    scoreError.classList.add(`error`);
+    document.body.appendChild(scoreError);
+    
+    setTimeout(() => document.querySelector('.error').remove(), 300)
+    
   }
   resizeRendererToDisplaySize = (renderer) => {
     const canvas = renderer.domElement;
@@ -150,30 +192,20 @@ export default class GameEngine {
 
   gameInit() {
     document.body.appendChild( this.renderer.domElement );
-    window.addEventListener("keydown", event => {
-      // this.goalArea.material.color.setHex(0xffffff)
-      let objs = this.spawnedObjects;
-      let childs = this.scene.children;
-      
-      // debugger;
-      
-    })
-    window.addEventListener("keyup", event => {
-      
-      
-    })
     const pointLight = new THREE.PointLight(0xffffff, .75); 
     pointLight.position.set(0, 50, 200); 
     // this.scene.add(pointLight); 
     // pointLight.color.setHSL(Math.random(), 1, 0.5); 
     pointLight.lookAt(this.mesh.position)
-    this.gameRunning = true;
+    if (this.gameRunning) {
     
-
+    
+    
+    
     // this is how cubes are currently spawned, completely randomly at the same interval
     {
       let cubes = [this.aCube, this.sCube, this.kCube, this.lCube];
-      setInterval(() => {
+      this.interval = setInterval(() => {
         let selectedCube = cubes[Math.floor(Math.random()*cubes.length)]
         let tempCube = selectedCube.model.clone();
         tempCube.name = selectedCube.name;
@@ -205,7 +237,7 @@ export default class GameEngine {
     
     // this.addStars();
   }
-
+}
   removeSomeObject(object) {
     this.scene.remove(object);
     object.geometry.dispose();
@@ -227,13 +259,12 @@ export default class GameEngine {
       cube.rotation.x = rot;
       cube.rotation.y = rot;
       cube.position.z = cube.position.z + 5;
-      if (cube.position.z > 300) {
+      if (cube.position.z > 280) {
         this.spawnedObjects.shift();
         this.removeSomeObject(cube);
-        if (this.score > 0 ) {
-
-          this.score -= 1;
-          
+        this.misses += 1;
+        if (this.misses === 3) {
+          this.gameOver();
         }
         this.deductScore();
         this.scoreObj.textContent = `Score: ${this.score}`;
@@ -286,6 +317,7 @@ export default class GameEngine {
     // this.renderer.render(this.scene, this.camera);
     // requestAnimationFrame(this.animateStars);
   }
+
   keyDown(event) {
     this.keyIndicator.textContent = 'key down';
     if (event.defaultPrevented) {

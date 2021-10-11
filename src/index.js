@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // document.body.append(playBtn);
   
   playBtn.addEventListener('click', e => {
-    toggleButtonsToHide([btns, screenCover, score]);
+    toggleButtonsToHide([screenCover]);
     // mm.clearRenderer();
     ge.gameInit();
   })
