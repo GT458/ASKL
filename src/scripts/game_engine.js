@@ -268,7 +268,7 @@ export default class GameEngine {
       cube.rotation.x = rot;
       cube.rotation.y = rot;
       cube.position.z = cube.position.z + 5;
-      if (cube.position.z > 280) {
+      if (cube.position.z > 300) {
         this.spawnedObjects.shift();
         this.removeSomeObject(cube);
         this.misses += 1;
@@ -331,7 +331,7 @@ export default class GameEngine {
   }
 
   keyDown(event) {
-    this.keyIndicator.textContent = 'key down';
+    //this.keyIndicator.textContent = 'key down';
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
@@ -340,23 +340,23 @@ export default class GameEngine {
     
         switch(event.key) {
           case 'a':
-            this.setKeyDown('a');
+             this.keysDown['a'] = true;
             // console.log(this.getKeyDown());
             this.goalArea.material.color.setHex(0x63e695);
             // this.keysDown.a = true;
             break;
           case 's':
-            this.setKeyDown('s');
+            this.keysDown['s'] = true;
             this.goalArea.material.color.setHex(0xe49ded);
             // keysDown.s = true;
             break;
           case 'k':
-            this.setKeyDown('k');
+            this.keysDown['k'] = true;
             this.goalArea.material.color.setHex(0xe31219);
             // keysDown.k = true;
             break;
           case 'l':
-            this.setKeyDown('l');
+            this.keysDown['l'] = true;
             this.goalArea.material.color.setHex(0x3d9ee3);
             // keysDown.l = true;
             break;
@@ -364,11 +364,13 @@ export default class GameEngine {
             return;
         }
       }
+      const keyIndicator = document.querySelector('.key-ind');
+    keyIndicator.textContent = Object.values(this.getKeyDown()).toString();
+    
         event.preventDefault();
   }
 
   keyUp(event) {
-    this.keyIndicator.textContent = 'key up';
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
@@ -377,27 +379,30 @@ export default class GameEngine {
       case 'a':
         // keysDown.a = false;
         // console.log(`key: ${this.getKeyDown()}`)
-        this.setKeyDown('a');
+        this.keysDown['a'] = false;
         // console.log(this.getKeyDown());
         break;
       case 's':
         // keysDown.s = false;
-        this.setKeyDown('s');
+         this.keysDown['s'] = false;
         // console.log('s up');
         break;
       case 'k':
-        this.setKeyDown('k');
+         this.keysDown['k'] = false;
         // keysDown.k = false;
         // console.log('k up');
         break;
       case 'l':
         // keysDown.l = false;
-        this.setKeyDown('l');
+         this.keysDown['l'] = false;
         // console.log(\'l up');
         break;
       default:
         return;
     }
+    const keyIndicator = document.querySelector('.key-ind');
+    keyIndicator.textContent = Object.values(this.getKeyDown()).toString();
+    
     //console.log(this.score);
     this.goalArea.material.color.setHex(0xffffff)
     event.preventDefault();
