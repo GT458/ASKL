@@ -25,12 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const instructions = document.querySelector('.instructions');
   const screenCover = document.querySelector('.screen-cover');
   const closeBtn = document.querySelector('.close-btn');
-
+  
   // mm.initMenu();
   // document.body.append(playBtn);
   
   playBtn.addEventListener('click', e => {
-    toggleButtonsToHide([screenCover]);
+    toggleButtonsToHide([screenCover, score]);
     // mm.clearRenderer();
     ge.gameInit();
   })

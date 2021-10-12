@@ -134,24 +134,32 @@ export default class GameEngine {
   }
 
   restartGame() {
-    const gc = document.createElement('canvas');
-    gc.setAttribute('id', 'gameCanvas');
-    document.body.appendChild(gc);
-    setTimeout(() => {
-    gc.style.opacity = 1;
-  }, 100)
-    document.querySelector('.game-over-bg').remove();
-    const screenCover = document.querySelector('.screen-cover');
-    screenCover.classList.remove('hide');
+    window.location.reload();
+    // const currentGc = document.getElementById('gameCanvas');
+    // currentGc.remove();
+    // const gc = document.createElement('canvas');
+    // gc.setAttribute('id', 'gameCanvas');
+    // document.body.appendChild(gc);
+  //   setTimeout(() => {
+  //   gc.style.opacity = 1;
+  // }, 100)
+  //   document.querySelector('.game-over-bg').remove();
+  //   const ge = new GameEngine();
+  //   const screenCover = document.querySelector('.screen-cover');
+  //   screenCover.classList.remove('hide');
   }
 
   gameOver() {
     this.gameRunning = false;
     
     clearInterval(this.interval);
+    this.spawnedObjects.forEach(obj => {
+      this.scene.remove(obj);
+      obj = undefined;
+    })
     this.scene.children.forEach( child => {
       this.scene.remove(child);
-
+      child = undefined;
     })
     const gameOverBg = document.createElement('div');
     gameOverBg.classList.add('game-over-bg');
@@ -161,6 +169,7 @@ export default class GameEngine {
     document.body.appendChild(gameOverBg);
     const restartBtn = document.createElement('button');
     restartBtn.classList.add('restart-btn');
+    restartBtn.textContent = 'Restart?';
     restartBtn.onclick = this.restartGame;
     gameOverBg.appendChild(restartBtn);
     //document.querySelector('#gameCanvas').remove();
@@ -266,7 +275,10 @@ export default class GameEngine {
         if (this.misses === 3) {
           this.gameOver();
         }
-        this.deductScore();
+        if (this.gameRunning) {
+
+          this.deductScore();
+        }
         this.scoreObj.textContent = `Score: ${this.score}`;
       }
       
