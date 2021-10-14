@@ -10,7 +10,7 @@ import * as myFont from '../fonts/helvetiker_regular.typeface.json';
 // import {POSTPROCESSING} from postprocessing;
 export default class GameEngine {
   constructor() {
-
+    this.animId = 0;
     // SET ARRAYS, SET UP CANVAS AND ENVIRONMENT
     this.stars = [];
     this.cloudParticles = [];
@@ -114,6 +114,7 @@ export default class GameEngine {
     // this.scene.add(this.light);
 
     // SET WINDOW FUNCTIONS, BINDING
+    this.checkPosition = this.checkPosition.bind(this);
     this.restartGame = this.restartGame.bind(this);
     this.gameOver = this.gameOver.bind(this);
     this.deductScore = this.deductScore.bind(this);
@@ -254,6 +255,37 @@ export default class GameEngine {
     object = undefined;
     
   }
+  
+
+  checkPosition(cube) {
+    if (cube.position.z > 310) {
+        this.spawnedObjects.shift();
+        this.removeSomeObject(cube);
+        this.misses += 1;
+        if (this.misses === 3) {
+          this.gameOver();
+        }
+        if (this.gameRunning) {
+          cancelAnimationFrame(this.animId);
+          console.log(cube.position.z);
+          this.deductScore();
+        }
+        this.scoreObj.textContent = `Score: ${this.score}`;
+      }
+      
+      if (cube.position.z > 145 && cube.position.z < 160) {
+      
+        if (this.keysDown[cube.name] && !this.debounce) {
+          this.removeSomeObject(cube);
+          this.debounce = true;
+          
+          this.score += 1;
+          this.scoreObj.textContent = `Score: ${this.score}`;
+        }
+        
+      }
+      this.debounce = false;
+  }
   animate(time) {
     time *= 0.001;
     // this.mesh.rotateX(Math.PI/time*.1);
@@ -268,38 +300,40 @@ export default class GameEngine {
       cube.rotation.x = rot;
       cube.rotation.y = rot;
       cube.position.z = cube.position.z + 5;
-      if (cube.position.z > 300) {
-        this.spawnedObjects.shift();
-        this.removeSomeObject(cube);
-        this.misses += 1;
-        if (this.misses === 3) {
-          this.gameOver();
-        }
-        if (this.gameRunning) {
-
-          this.deductScore();
-        }
-        this.scoreObj.textContent = `Score: ${this.score}`;
-      }
+      this.checkPosition(cube);
+      // if (cube.position.z > 310) {
+      //   this.spawnedObjects.shift();
+      //   this.removeSomeObject(cube);
+      //   this.misses += 1;
+      //   if (this.misses === 3) {
+      //     this.gameOver();
+      //   }
+      //   if (this.gameRunning) {
+      //     cancelAnimationFrame(this.animId);
+      //     console.log(cube.position.z);
+      //     this.deductScore();
+      //   }
+      //   this.scoreObj.textContent = `Score: ${this.score}`;
+      // }
       
-      if (cube.position.z > 145 && cube.position.z < 160) {
+      // if (cube.position.z > 145 && cube.position.z < 160) {
       
-        if (this.keysDown[cube.name] && !this.debounce) {
-          this.debounce = true;
+      //   if (this.keysDown[cube.name] && !this.debounce) {
+      //     this.removeSomeObject(cube);
+      //     this.debounce = true;
           
-          this.score += 1;
-          this.scoreObj.textContent = `Score: ${this.score}`;
-          this.removeSomeObject(cube);
-        }
+      //     this.score += 1;
+      //     this.scoreObj.textContent = `Score: ${this.score}`;
+      //   }
         
-      }
-      this.debounce = false;
+      // }
+      // this.debounce = false;
     });
 
     this.renderer.render(this.scene, this.camera);
 
-    requestAnimationFrame(this.animate);
-    requestAnimationFrame(this.animateStars);
+    this.animId = requestAnimationFrame(this.animate);
+    // requestAnimationFrame(this.animateStars);
   }
   
   addStars(){
