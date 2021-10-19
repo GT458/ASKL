@@ -224,6 +224,7 @@ export default class GameEngine {
     // this.scene.add(pointLight); 
     // pointLight.color.setHSL(Math.random(), 1, 0.5); 
     pointLight.lookAt(this.mesh.position)
+    this.addStars();
     if (gameRunning) {
 
     // this is how cubes are currently spawned, completely randomly at the same interval
@@ -258,7 +259,7 @@ export default class GameEngine {
     };
     requestAnimationFrame(render);
     requestAnimationFrame(this.animate);
-    // requestAnimationFrame(this.animateStars);
+    
     
     // this.addStars();
   }
@@ -352,7 +353,7 @@ export default class GameEngine {
     this.renderer.render(this.scene, this.camera);
 
     this.animId = requestAnimationFrame(this.animate);
-    // requestAnimationFrame(this.animateStars);
+    requestAnimationFrame(this.animateStars);
   }
   
   addStars(){
@@ -380,7 +381,7 @@ export default class GameEngine {
       }
     }
     // this.renderer.render(this.scene, this.camera);
-    // requestAnimationFrame(this.animateStars);
+   requestAnimationFrame(this.animateStars);
   }
 
   keyDown(event) {
