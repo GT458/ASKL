@@ -5,17 +5,20 @@ import smokeTexture from '../images/smoke.png';
 import stars from '../images/stars.jpeg';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
-
+import { Loop } from './systems/loop';
 
 // import {POSTPROCESSING} from postprocessing;
+let gameOver = false;
+let gameRunning = false;
 export default class GameEngine {
   constructor() {
     this.animId = 0;
+    
     // SET ARRAYS, SET UP CANVAS AND ENVIRONMENT
     this.stars = [];
     this.cloudParticles = [];
     this.spawnedObjects = [];
-    this.gameRunning = true;
+    // this.gameRunning = true;
     this.scene = new THREE.Scene();
     this.keyIsDown = false;
     const canvas = document.getElementById('gameCanvas');
@@ -32,12 +35,13 @@ export default class GameEngine {
 
 
     // SET CUBE MODELS
-    this.aCube = {model: new Cube('green').obj, startPos: [-12, 0, -300], name: 'a'};
-    this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's'};
-    this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k'};
-    this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l'};
+    this.aCube = {model: new Cube('green').obj, startPos: [-12, 0, -300], name: 'a', beenHit: false};
+    this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's', beenHit: false};
+    this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k', beenHit: false};
+    this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l', beenHit: false};
 
-
+    // Create Loop 
+    this.loop = new Loop(this.camera, this.scene, this.renderer);
     
     
     
@@ -114,6 +118,8 @@ export default class GameEngine {
     // this.scene.add(this.light);
 
     // SET WINDOW FUNCTIONS, BINDING
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
     this.checkPosition = this.checkPosition.bind(this);
     this.restartGame = this.restartGame.bind(this);
     this.gameOver = this.gameOver.bind(this);
@@ -134,6 +140,15 @@ export default class GameEngine {
     // this.gameInit();
   }
 
+
+
+  start() {
+    this.loop.start();
+  }
+
+  stop() {
+    this.loop.stop();
+  }
   restartGame() {
     window.location.reload();
     // const currentGc = document.getElementById('gameCanvas');
@@ -151,7 +166,8 @@ export default class GameEngine {
   }
 
   gameOver() {
-    this.gameRunning = false;
+    gameRunning = false;
+    // this.renderer.setAnimationLoop(null);
     
     clearInterval(this.interval);
     this.spawnedObjects.forEach(obj => {
@@ -202,16 +218,14 @@ export default class GameEngine {
 
   gameInit() {
     document.body.appendChild( this.renderer.domElement );
+    gameRunning = true;
     const pointLight = new THREE.PointLight(0xffffff, .75); 
     pointLight.position.set(0, 50, 200); 
     // this.scene.add(pointLight); 
     // pointLight.color.setHSL(Math.random(), 1, 0.5); 
     pointLight.lookAt(this.mesh.position)
-    if (this.gameRunning) {
-    
-    
-    
-    
+    if (gameRunning) {
+
     // this is how cubes are currently spawned, completely randomly at the same interval
     {
       let cubes = [this.aCube, this.sCube, this.kCube, this.lCube];
@@ -219,7 +233,8 @@ export default class GameEngine {
         let selectedCube = cubes[Math.floor(Math.random()*cubes.length)]
         let tempCube = selectedCube.model.clone();
         tempCube.name = selectedCube.name;
-        this.spawnedObjects.push(tempCube);
+        let cubeObj = {cube: tempCube, beenHit: false}
+        this.spawnedObjects.push(cubeObj);
         this.scene.add(tempCube);
         tempCube.position.set(selectedCube.startPos[0],selectedCube.startPos[1],selectedCube.startPos[2])
         
@@ -257,15 +272,19 @@ export default class GameEngine {
   }
   
 
-  checkPosition(cube) {
-    if (cube.position.z > 310) {
+  checkPosition(cubeObj) {
+    let cube = cubeObj.cube;
+    const misses = document.querySelector('.misses');
+    misses.textContent = `misses: ${this.misses}`;
+    if (cube.position.z > 310 && cubeObj.beenHit === false) {
         this.spawnedObjects.shift();
         this.removeSomeObject(cube);
         this.misses += 1;
         if (this.misses === 3) {
+          gameOver = true;
           this.gameOver();
         }
-        if (this.gameRunning) {
+        if (gameRunning) {
           cancelAnimationFrame(this.animId);
           console.log(cube.position.z);
           this.deductScore();
@@ -278,7 +297,7 @@ export default class GameEngine {
         if (this.keysDown[cube.name] && !this.debounce) {
           this.removeSomeObject(cube);
           this.debounce = true;
-          
+          cubeObj.beenHit = true;
           this.score += 1;
           this.scoreObj.textContent = `Score: ${this.score}`;
         }
@@ -289,18 +308,18 @@ export default class GameEngine {
   animate(time) {
     time *= 0.001;
     // this.mesh.rotateX(Math.PI/time*.1);
-    this.spawnedObjects.forEach((cube, ndx) => {
+    this.spawnedObjects.forEach((cubeObj, ndx) => {
       // if (cube === undefined) {
       //   console.log('poop cube');
       //   return;
       // }
       const rot = time *.001;
       const speed = 1 + ndx * .07;
-      
+      const cube = cubeObj.cube
       cube.rotation.x = rot;
       cube.rotation.y = rot;
       cube.position.z = cube.position.z + 5;
-      this.checkPosition(cube);
+      this.checkPosition(cubeObj);
       // if (cube.position.z > 310) {
       //   this.spawnedObjects.shift();
       //   this.removeSomeObject(cube);
