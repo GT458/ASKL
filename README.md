@@ -1,15 +1,14 @@
 # ASKL
 
-ASKL (pronounced 'ASKULL') is a beat-saber inspired game where a user has 4 sabers to control with the keys 'A S K L'. A randomly selected song will play and the user will have to hit the right key combinations that match the beat of the song to earn points. Users can be on a continuous point streak for not missing a beat. The rules are simple. Start the song, hit the right keys and make it to the end. Too many mistakes and you will have to restart. 
+ASKL (pronounced 'ASKULL') is a beat-saber inspired game where a user must time and capture incoming cubes with the keys 'A S K L'. The cubes will increase with speed and a user will accumulate points as more cubes are captured. Users can be on a continuous point streak for not missing a beat. Too many mistakes and you will have to restart. 
 
 # Functionality
 
 In ASKL, users will be able to:
 
 
-* Select a song from a list or be given a random song to play to
 * Start the game and use the ASKL keys to hit the right letter combinations
-* Earn a local high score for their session (perhaps a global highscore board as well?)
+* Earn a local high score for their session 
 * Pause, resume, and restart the game or return to the main menu
 
 In addition, this project will include:
@@ -17,20 +16,6 @@ In addition, this project will include:
 * A prompt with instructions 
 * Production README
 
-
-# Wireframe
-![image](https://cdn.discordapp.com/attachments/780245510996230175/868931648174034956/unknown.png)
-
-* Main menu to select random song or choose a song
-
-![image](https://cdn.discordapp.com/attachments/780245510996230175/868931691446669342/unknown.png)
-
-* Score on top left
-* Streak on top right
-* Current song playing on bottom right
-* Pause button underneath streak
-* Player at bottom of screen with 4 sabers
-* Incoming obstacles to hit with corresponding key on keyboard
 
 
 # Technologies
