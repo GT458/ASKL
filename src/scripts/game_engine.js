@@ -6,10 +6,11 @@ import stars from '../images/stars.jpeg';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
 import { Loop } from './systems/loop';
-
+import music from '../quasar.mp3/'
 // import {POSTPROCESSING} from postprocessing;
 let gameOver = false;
 let gameRunning = false;
+const audio = document.getElementById("audio");
 export default class GameEngine {
   constructor() {
     this.animId = 0;
@@ -168,7 +169,7 @@ export default class GameEngine {
   gameOver() {
     gameRunning = false;
     // this.renderer.setAnimationLoop(null);
-    
+    audio.pause();
     clearInterval(this.interval);
     this.spawnedObjects.forEach(obj => {
       this.scene.remove(obj);
@@ -217,8 +218,11 @@ export default class GameEngine {
   
 
   gameInit() {
+    
+    
     document.body.appendChild( this.renderer.domElement );
     gameRunning = true;
+    audio.play();
     const pointLight = new THREE.PointLight(0xffffff, .75); 
     pointLight.position.set(0, 50, 200); 
     // this.scene.add(pointLight); 
@@ -226,7 +230,7 @@ export default class GameEngine {
     pointLight.lookAt(this.mesh.position)
     this.addStars();
     if (gameRunning) {
-
+      
     // this is how cubes are currently spawned, completely randomly at the same interval
     {
       let cubes = [this.aCube, this.sCube, this.kCube, this.lCube];
