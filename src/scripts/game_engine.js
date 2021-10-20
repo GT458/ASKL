@@ -277,8 +277,8 @@ export default class GameEngine {
     let cube = cubeObj.cube;
     const misses = document.querySelector('.misses');
     misses.textContent = `misses: ${this.misses}`;
-    if (cube.position.z > 310 && cubeObj.beenHit === false) {
-        this.spawnedObjects.shift();
+    if (cube.position.z > 310 && cubeObj.beenHit === false && gameOVer ===false) {
+        
         this.removeSomeObject(cube);
         this.misses += 1;
         if (this.misses === 3) {
@@ -290,6 +290,7 @@ export default class GameEngine {
           console.log(cube.position.z);
           this.deductScore();
         }
+        this.spawnedObjects.shift();
         this.scoreObj.textContent = `Score: ${this.score}`;
       }
       
