@@ -6,15 +6,15 @@ import stars from '../images/stars.jpeg';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
 import { Loop } from './systems/loop';
-import music from '../quasar.mp3/'
+// import music from '../audio/quasar.mp3/'
 // import {POSTPROCESSING} from postprocessing;
 let gameOver = false;
 let gameRunning = false;
-const audio = document.getElementById("audio");
+
 export default class GameEngine {
   constructor() {
     this.animId = 0;
-    
+    this.speed = 2;
     // SET ARRAYS, SET UP CANVAS AND ENVIRONMENT
     this.stars = [];
     this.cloudParticles = [];
@@ -169,6 +169,7 @@ export default class GameEngine {
   gameOver() {
     gameRunning = false;
     // this.renderer.setAnimationLoop(null);
+    const audio = document.getElementById("audio");
     audio.pause();
     clearInterval(this.interval);
     this.spawnedObjects.forEach(obj => {
@@ -222,7 +223,9 @@ export default class GameEngine {
     
     document.body.appendChild( this.renderer.domElement );
     gameRunning = true;
+    const audio = document.getElementById("audio");
     audio.play();
+    
     const pointLight = new THREE.PointLight(0xffffff, .75); 
     pointLight.position.set(0, 50, 200); 
     // this.scene.add(pointLight); 
@@ -281,7 +284,7 @@ export default class GameEngine {
     let cube = cubeObj.cube;
     const misses = document.querySelector('.misses');
     misses.textContent = `misses: ${this.misses}`;
-    if (cube.position.z > 310 && cubeObj.beenHit === false && gameOVer ===false) {
+    if (cube.position.z > 310 && cubeObj.beenHit === false && gameOver ===false) {
         
         this.removeSomeObject(cube);
         this.misses += 1;
@@ -324,7 +327,8 @@ export default class GameEngine {
       const cube = cubeObj.cube
       cube.rotation.x = rot;
       cube.rotation.y = rot;
-      cube.position.z = cube.position.z + 5;
+      cube.position.z = cube.position.z + this.speed;
+      this.speed += .0001;
       this.checkPosition(cubeObj);
       // if (cube.position.z > 310) {
       //   this.spawnedObjects.shift();
@@ -423,8 +427,7 @@ export default class GameEngine {
             return;
         }
       }
-      const keyIndicator = document.querySelector('.key-ind');
-    keyIndicator.textContent = Object.values(this.getKeyDown()).toString();
+      
     
         event.preventDefault();
   }
@@ -459,9 +462,7 @@ export default class GameEngine {
       default:
         return;
     }
-    const keyIndicator = document.querySelector('.key-ind');
-    keyIndicator.textContent = Object.values(this.getKeyDown()).toString();
-    
+   
     //console.log(this.score);
     this.goalArea.material.color.setHex(0xffffff)
     event.preventDefault();
