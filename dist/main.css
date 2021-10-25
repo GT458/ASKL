@@ -21,6 +21,19 @@
 /*!*****************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/sass-loader/dist/cjs.js!./src/index.scss (1) ***!
   \*****************************************************************************************************************************************/
+@keyframes fade {
+  0% {
+    opacity: 1;
+    color: #5163de;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    color: #1f9be8;
+  }
+}
 body {
   font-family: "Roboto", sans-serif;
   background-color: #dc9b9b;
@@ -34,6 +47,9 @@ body .screen-cover {
   left: 0;
   top: 0;
   z-index: 1;
+}
+body .screen-cover h1 {
+  animation: fade 500ms ease infinite;
 }
 body .btn {
   border: none;
@@ -51,6 +67,9 @@ body .btn {
 body .btn:hover {
   cursor: pointer;
   background-color: white;
+}
+body .btn:active {
+  transform: scale(0.98);
 }
 body .instructions {
   width: 500px;

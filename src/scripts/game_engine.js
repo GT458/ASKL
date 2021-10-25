@@ -282,8 +282,8 @@ export default class GameEngine {
 
   checkPosition(cubeObj) {
     let cube = cubeObj.cube;
-    const misses = document.querySelector('.misses');
-    misses.textContent = `misses: ${this.misses}`;
+    // const misses = document.querySelector('.misses');
+    // misses.textContent = `misses: ${this.misses}`;
     if (cube.position.z > 310 && cubeObj.beenHit === false && gameOver ===false) {
         
         this.removeSomeObject(cube);
