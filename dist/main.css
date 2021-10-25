@@ -24,14 +24,14 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #5163de;
+    color: #e391c0;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #1f9be8;
+    color: #d5b45c;
   }
 }
 body {

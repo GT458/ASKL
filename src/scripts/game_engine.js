@@ -6,6 +6,8 @@ import stars from '../images/stars.jpeg';
 import Cube from './cube';
 import * as myFont from '../fonts/helvetiker_regular.typeface.json';
 import { Loop } from './systems/loop';
+import {gsap} from "gsap";
+import { TweenMax } from 'gsap/gsap-core';
 // import music from '../audio/quasar.mp3/'
 // import {POSTPROCESSING} from postprocessing;
 let gameOver = false;
@@ -13,6 +15,7 @@ let gameRunning = false;
 
 export default class GameEngine {
   constructor() {
+    this.mouse = new THREE.Vector2(0, 0)
     this.animId = 0;
     this.speed = 2;
     // SET ARRAYS, SET UP CANVAS AND ENVIRONMENT
@@ -89,10 +92,10 @@ export default class GameEngine {
         bevelSegments: 5
       } );
     this.textMaterial = new THREE.MeshNormalMaterial( { color: 0xffffff, flatShading: true } );
-    this.mesh = new THREE.Mesh( this.geometry, this.textMaterial );
-    this.mesh.position.set( -170, 150, -350 );
-    this.mesh.rotateX(Math.PI/5)
-    this.scene.add(this.mesh);
+    this.textMesh = new THREE.Mesh( this.geometry, this.textMaterial );
+    this.textMesh.position.set( -170, 150, -350 );
+    this.textMesh.rotateX(Math.PI/5)
+    this.scene.add(this.textMesh);
 
 
 
@@ -137,6 +140,8 @@ export default class GameEngine {
     this.keyIndicator = document.querySelector('.key-down');
     this.debounce = false;
     this.interval = null;
+    this.onMouseMove = this.onMouseMove.bind(this)
+    window.addEventListener("keydown", this.onMouseMove.bind(this), true);
     // INITIALIZE GAME
     // this.gameInit();
   }
@@ -216,12 +221,24 @@ export default class GameEngine {
     return needResize;
   }
 
-  
+  onMouseMove(event) {
+    // TweenMax.to(this.onMouseMove, 0.5, {
+    //   x: (Math.random() * 30 / window.innerWidth) * 2 - 1,
+    //   y: (Math.random() * 30 / window.innerHeight) * 2 + 1,
+    // })
+    TweenMax.to(this.textMesh.rotation, 3, {
+		  // x: Math.random() * 30,
+      x: Math.random() * 30
+		  //y: this.mouse.x * (Math.PI / 6)
+	  })
+  }
 
   gameInit() {
     
     
     document.body.appendChild( this.renderer.domElement );
+    
+    // window.addEventListener('mousemove', ev => { this.onMouseMove(ev)})
     gameRunning = true;
     const audio = document.getElementById("audio");
     audio.play();
@@ -230,7 +247,7 @@ export default class GameEngine {
     pointLight.position.set(0, 50, 200); 
     // this.scene.add(pointLight); 
     // pointLight.color.setHSL(Math.random(), 1, 0.5); 
-    pointLight.lookAt(this.mesh.position)
+    pointLight.lookAt(this.textMesh.position)
     this.addStars();
     if (gameRunning) {
       
@@ -364,7 +381,9 @@ export default class GameEngine {
     this.animId = requestAnimationFrame(this.animate);
     requestAnimationFrame(this.animateStars);
   }
-  
+  animteText() {
+    this.textMesh
+  }
   addStars(){
     	for ( let z= -1000; z < 1000; z+=20 ) {
 					let geometry   = new THREE.SphereGeometry(0.5, 32, 32)
