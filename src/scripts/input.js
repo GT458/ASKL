@@ -12,7 +12,7 @@ class Input {
   handleClick(e) {
     this.timesClicked += 1;
     this.span.textContent = `${this.timesClicked}`;
-    console.log(this.timesClicked);
+    // console.log(this.timesClicked);
   }
 }
 

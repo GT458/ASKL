@@ -81,7 +81,7 @@ class keyInputs {
       default:
         return;
     }
-    console.log(this.getKeyDown());
+    // console.log(this.getKeyDown());
     event.preventDefault();
   }
 

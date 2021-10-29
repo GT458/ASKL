@@ -91,7 +91,7 @@ export default class GameEngine {
         bevelOffset: 0,
         bevelSegments: 5
       } );
-    this.textMaterial = new THREE.MeshNormalMaterial( { color: 0xffffff, flatShading: true } );
+    this.textMaterial = new THREE.MeshNormalMaterial();
     this.textMesh = new THREE.Mesh( this.geometry, this.textMaterial );
     this.textMesh.position.set( -170, 150, -350 );
     this.textMesh.rotateX(Math.PI/5)
@@ -105,10 +105,10 @@ export default class GameEngine {
     this.directionalLightPaleOrange.position.set(0,0,1);
     // this.scene.add(this.directionalLightPaleOrange);    
     this.orangeLight = new THREE.DirectionalLight(0x4f80c9,50,450,1.7);
-    this.orangeLight.position.set(-50,10,-300);
+    this.orangeLight.position.set(-50,20,-350);
     this.scene.add(this.orangeLight);
     this.redLight = new THREE.PointLight(0xd8547e,50,450,1.7);
-    this.redLight.position.set(0,10,-300);
+    this.redLight.position.set(0,15,-300);
     this.scene.add(this.redLight);
     this.blueLight = new THREE.PointLight(0x3677ac,50,450,1.7);
     this.blueLight.position.set(50,10,-300);
@@ -118,7 +118,7 @@ export default class GameEngine {
     // this.scene.add(this.ambientLight);
     
     this.light = new THREE.PointLight(0xffffff);
-    this.light.position.set(0, 0, -50);
+    this.light.position.set(0, 10, -50);
     // this.scene.add(this.light);
 
     // SET WINDOW FUNCTIONS, BINDING
@@ -172,6 +172,11 @@ export default class GameEngine {
   }
 
   gameOver() {
+    const finalScore = this.score;
+    const finalScoreText = document.createElement("span");
+    finalScoreText.innerText = finalScore;
+    finalScoreText.classList.add('final-score');
+    document.body.append(finalScoreText);
     gameRunning = false;
     // this.renderer.setAnimationLoop(null);
     const audio = document.getElementById("audio");
