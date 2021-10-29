@@ -24,16 +24,24 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #f84aec;
+    color: #e742e4;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #1d060f;
+    color: #98d2af;
   }
 }
+a {
+  text-decoration: none;
+  color: black;
+}
+a:visited {
+  color: black;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   background-color: #dc9b9b;

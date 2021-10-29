@@ -8,7 +8,7 @@ import * as myFont from '../fonts/helvetiker_regular.typeface.json';
 import { Loop } from './systems/loop';
 import {gsap} from "gsap";
 import { TweenMax } from 'gsap/gsap-core';
-// import music from '../audio/quasar.mp3/'
+import music from '../audio/quasar.mp3'
 // import {POSTPROCESSING} from postprocessing;
 let gameOver = false;
 let gameRunning = false;
@@ -18,6 +18,7 @@ export default class GameEngine {
     this.mouse = new THREE.Vector2(0, 0)
     this.animId = 0;
     this.speed = 2;
+    this.audio = new Audio(music);
     // SET ARRAYS, SET UP CANVAS AND ENVIRONMENT
     this.stars = [];
     this.cloudParticles = [];
@@ -39,10 +40,10 @@ export default class GameEngine {
 
 
     // SET CUBE MODELS
-    this.aCube = {model: new Cube('green').obj, startPos: [-12, 0, -300], name: 'a', beenHit: false};
-    this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's', beenHit: false};
-    this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k', beenHit: false};
-    this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l', beenHit: false};
+    this.aCube = {model: new Cube('green').obj, startPos: [-12, 0, -300], name: 'a', beenHit: false, strikeCounted: false};
+    this.sCube = {model: new Cube('pink').obj, startPos:  [-5, 0, -300], name: 's', beenHit: false, strikeCounted: false};
+    this.kCube = {model: new Cube('red').obj, startPos:  [5, 0, -300], name:'k', beenHit: false, strikeCounted: false};
+    this.lCube = {model: new Cube('blue').obj, startPos:  [12, 0, -300], name: 'l', beenHit: false, strikeCounted: false};
 
     // Create Loop 
     this.loop = new Loop(this.camera, this.scene, this.renderer);
@@ -179,8 +180,7 @@ export default class GameEngine {
     document.body.append(finalScoreText);
     gameRunning = false;
     // this.renderer.setAnimationLoop(null);
-    const audio = document.getElementById("audio");
-    audio.pause();
+    this.audio.pause();
     clearInterval(this.interval);
     this.spawnedObjects.forEach(obj => {
       this.scene.remove(obj);
@@ -245,8 +245,7 @@ export default class GameEngine {
     
     // window.addEventListener('mousemove', ev => { this.onMouseMove(ev)})
     gameRunning = true;
-    const audio = document.getElementById("audio");
-    audio.play();
+    this.audio.play();
     
     const pointLight = new THREE.PointLight(0xffffff, .75); 
     pointLight.position.set(0, 50, 200); 
@@ -306,10 +305,11 @@ export default class GameEngine {
     let cube = cubeObj.cube;
     // const misses = document.querySelector('.misses');
     // misses.textContent = `misses: ${this.misses}`;
-    if (cube.position.z > 310 && cubeObj.beenHit === false && gameOver ===false) {
+    if (cube.position.z > 310 && cubeObj.beenHit === false && gameOver ===false && cubeObj.strikeCounted === false) {
         
         this.removeSomeObject(cube);
         this.misses += 1;
+        cubeObj.strikeCounted = true;
         if (this.misses === 3) {
           gameOver = true;
           this.gameOver();
@@ -325,7 +325,7 @@ export default class GameEngine {
       
       if (cube.position.z > 145 && cube.position.z < 160) {
       
-        if (this.keysDown[cube.name] && !this.debounce) {
+        if (this.keysDown[cube.name] && !this.debounce && cube.beenHit === false) {
           this.removeSomeObject(cube);
           this.debounce = true;
           cubeObj.beenHit = true;
@@ -384,7 +384,7 @@ export default class GameEngine {
     this.renderer.render(this.scene, this.camera);
 
     this.animId = requestAnimationFrame(this.animate);
-    requestAnimationFrame(this.animateStars);
+    // requestAnimationFrame(this.animateStars);
   }
   animteText() {
     this.textMesh
