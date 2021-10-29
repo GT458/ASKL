@@ -305,8 +305,8 @@ export default class GameEngine {
     let cube = cubeObj.cube;
     // const misses = document.querySelector('.misses');
     // misses.textContent = `misses: ${this.misses}`;
-    if (cube.position.z > 310 && cubeObj.beenHit === false && gameOver ===false && cubeObj.strikeCounted === false) {
-        
+    if (cube.position.z > 160 && cubeObj.beenHit === false && gameOver ===false && cubeObj.strikeCounted === false) {
+        console.log('miss');
         this.removeSomeObject(cube);
         this.misses += 1;
         cubeObj.strikeCounted = true;
@@ -325,7 +325,7 @@ export default class GameEngine {
       
       if (cube.position.z > 145 && cube.position.z < 160) {
       
-        if (this.keysDown[cube.name] && !this.debounce && cube.beenHit === false) {
+        if (this.keysDown[cube.name] && !this.debounce && cubeObj.beenHit === false) {
           this.removeSomeObject(cube);
           this.debounce = true;
           cubeObj.beenHit = true;
