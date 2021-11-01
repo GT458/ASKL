@@ -24,14 +24,14 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #e742e4;
+    color: #6fb9ba;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #98d2af;
+    color: #947488;
   }
 }
 a {
@@ -40,6 +40,30 @@ a {
 }
 a:visited {
   color: black;
+}
+
+@keyframes hover {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(50px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+.final-score {
+  width: 300px;
+  margin-left: -96px;
+  font-weight: bold;
+  font-size: 30px;
+  color: white;
+  z-index: 500;
+  position: absolute;
+  left: 50%;
+  top: 15%;
+  animation: hover 2s ease-in-out infinite;
 }
 
 body {

@@ -175,7 +175,7 @@ export default class GameEngine {
   gameOver() {
     const finalScore = this.score;
     const finalScoreText = document.createElement("span");
-    finalScoreText.innerText = finalScore;
+    finalScoreText.innerText = `Final Score: ${finalScore}`;
     finalScoreText.classList.add('final-score');
     document.body.append(finalScoreText);
     gameRunning = false;
