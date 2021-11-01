@@ -307,7 +307,7 @@ export default class GameEngine {
     // const misses = document.querySelector('.misses');
     // misses.textContent = `misses: ${this.misses}`;
     if (cube.position.z > 160 && cubeObj.beenHit === false && gameOver ===false && cubeObj.strikeCounted === false) {
-        console.log('miss');
+        // console.log('miss');
         this.removeSomeObject(cube);
         this.misses += 1;
         cubeObj.strikeCounted = true;
@@ -317,7 +317,7 @@ export default class GameEngine {
         }
         if (gameRunning) {
           cancelAnimationFrame(this.animId);
-          console.log(cube.position.z);
+          // console.log(cube.position.z);
           this.deductScore();
         }
         this.spawnedObjects.shift();
