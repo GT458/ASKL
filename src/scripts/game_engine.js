@@ -242,7 +242,21 @@ export default class GameEngine {
     
     
     document.body.appendChild( this.renderer.domElement );
-    
+    const muteButton = document.createElement('div');
+    muteButton.classList.add('mute-button');
+    const muteIcon = document.createElement('i');
+    muteIcon.classList.add('fas');
+    muteIcon.classList.add('fa-volume-up');
+    muteButton.append(muteIcon);
+    document.body.appendChild(muteButton);
+    muteIcon.onclick = () => {
+      muteIcon.classList.toggle('muted');
+      if (muteIcon.classList.contains('muted')) {
+        this.audio.muted = true;
+      } else {
+        this.audio.muted = false;
+      }
+    }
     // window.addEventListener('mousemove', ev => { this.onMouseMove(ev)})
     gameRunning = true;
     this.audio.play();

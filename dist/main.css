@@ -24,14 +24,14 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #0f1671;
+    color: #0d7d33;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #a7616a;
+    color: #35614b;
   }
 }
 a {
@@ -179,6 +179,27 @@ h1 {
 
 .hide {
   display: none !important;
+}
+
+.mute-button {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  bottom: 15%;
+  right: 20%;
+}
+.mute-button:hover {
+  cursor: pointer;
+}
+.mute-button:active {
+  transform: scale(0.98);
+}
+.mute-button i {
+  font-size: 50px;
+  color: white;
+}
+.mute-button i.muted {
+  opacity: 0.5;
 }
 
 @keyframes fade-in {
