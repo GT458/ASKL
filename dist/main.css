@@ -24,14 +24,14 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #8bfbf6;
+    color: #994993;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #d51775;
+    color: #9bc542;
   }
 }
 a {
@@ -91,7 +91,7 @@ body .screen-cover {
   top: 0;
   z-index: 1;
 }
-body .screen-cover h1 {
+body .screen-cover .title {
   animation: fade 500ms ease infinite;
 }
 body .btn {
@@ -126,7 +126,13 @@ body .instructions {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 10px;
+  border-radius: 70px 0 0 70px;
+  background-image: linear-gradient(90deg, #e11717, transparent);
   z-index: 22;
+}
+body .instructions .instructions-body {
+  text-align: center;
 }
 body .instructions .close-btn {
   position: absolute;
