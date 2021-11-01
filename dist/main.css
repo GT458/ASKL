@@ -24,14 +24,14 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #0d7d33;
+    color: #8bfbf6;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #35614b;
+    color: #d51775;
   }
 }
 a {
@@ -66,7 +66,7 @@ a:visited {
 }
 .final-score {
   width: 300px;
-  margin-left: -96px;
+  margin-left: -106px;
   font-weight: bold;
   font-size: 30px;
   color: white;
