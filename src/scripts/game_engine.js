@@ -262,7 +262,7 @@ export default class GameEngine {
         let selectedCube = cubes[Math.floor(Math.random()*cubes.length)]
         let tempCube = selectedCube.model.clone();
         tempCube.name = selectedCube.name;
-        let cubeObj = {cube: tempCube, beenHit: false}
+        let cubeObj = {cube: tempCube, beenHit: false, strikeCounted: false}
         this.spawnedObjects.push(cubeObj);
         this.scene.add(tempCube);
         tempCube.position.set(selectedCube.startPos[0],selectedCube.startPos[1],selectedCube.startPos[2])
@@ -302,6 +302,7 @@ export default class GameEngine {
   
 
   checkPosition(cubeObj) {
+    // console.log(this.spawnedObjects.length)
     let cube = cubeObj.cube;
     // const misses = document.querySelector('.misses');
     // misses.textContent = `misses: ${this.misses}`;
@@ -345,7 +346,7 @@ export default class GameEngine {
       //   return;
       // }
       const rot = time *.001;
-      const speed = 1 + ndx * .07;
+      // const speed = 1 + ndx * .07;
       const cube = cubeObj.cube
       cube.rotation.x = rot;
       cube.rotation.y = rot;
