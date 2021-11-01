@@ -24,14 +24,14 @@
 @keyframes fade {
   0% {
     opacity: 1;
-    color: #994993;
+    color: #0522d6;
   }
   50% {
     opacity: 0;
   }
   100% {
     opacity: 1;
-    color: #9bc542;
+    color: #fe16e2;
   }
 }
 a {
@@ -241,6 +241,10 @@ h1 {
 }
 .game-over-bg .restart-btn:hover {
   cursor: pointer;
+  background-color: white;
+}
+.game-over-bg .restart-btn:active {
+  transform: scale(0.98);
 }
 
 @keyframes error-shake {
