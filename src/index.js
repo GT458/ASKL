@@ -30,9 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // document.body.append(playBtn);
   
   playBtn.addEventListener('click', e => {
-    toggleButtonsToHide([screenCover, score]);
+    
     // mm.clearRenderer();
-    ge.gameInit();
+    screenCover.classList.add('fade-out');
+    setTimeout(() => {
+      ge.gameInit();
+      toggleButtonsToHide([screenCover, score]);
+    }, 3000)
+    // ge.gameInit();
   })
   closeBtn.addEventListener('click', e => {
     // e.preventPropagation();
